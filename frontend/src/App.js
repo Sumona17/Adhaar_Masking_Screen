@@ -1,15 +1,14 @@
 import React from "react";
-import Layout from "./pages/Layout/Layout";
-import BulkMasking from "./pages/Bulkmasking/BulkMasking";
- 
+import CustomLayout from "./pages/Layout/Layout";
+
+import { BrowserRouter as Router } from "react-router-dom"; // Wrap the app with Router
+
 function App() {
   return (
-<Layout>
-<div className="main-content">
-<BulkMasking/>
-</div>
-</Layout>
+    <Router>
+      <CustomLayout />
+    </Router>
   );
 }
- 
+
 export default App;
