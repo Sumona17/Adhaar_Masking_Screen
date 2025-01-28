@@ -5,6 +5,7 @@ import CustomFooter from "../Footer/Footer";
 import { Routes, Route } from "react-router-dom"; 
 import BulkMasking from "../Bulkmasking/BulkMasking";
 import UploadFile from "../Individual Adhaar/UploadFile";
+import NextScreen from "../Individual Adhaar/NextScreen";
 const {  Content } = Layout;
 
 const CustomLayout = () => {
@@ -12,19 +13,22 @@ const CustomLayout = () => {
     <Layout
       style={{
         minHeight: "100vh",
-        backgroundColor: "#f8f9fa", // Off-white background
+        backgroundImage: "url(/public/bg1.jpg')", // Set the background image
+        backgroundSize: "cover", // Ensures the image covers the entire area
+        backgroundPosition: "center", // Centers the image
       }}
     >
      
         <Header />
  
         <Content
+        
         style={{
           padding: "20px",
           backgroundColor: "#f8f9fa",
           borderRadius: "10px",
           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-          margin: "20px 0", // Margin above and below the content
+          margin: "0px 0", // Margin above and below the content
           flex: 1, // Allows Content to grow and fill remaining height
         }}
       >
@@ -32,6 +36,8 @@ const CustomLayout = () => {
           <Route path="/background" element={<></>} />
           <Route path="/individualAdhaar" element={<UploadFile/>} />
           <Route path="/bulkMasking" element={<BulkMasking />} />
+          <Route path="/secondScreen" element={<NextScreen />} />
+
           
         </Routes>
       </Content>
