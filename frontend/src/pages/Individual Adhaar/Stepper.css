@@ -1,0 +1,82 @@
+/* Stepper Container */
+.stepper-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+  }
+  
+  /* Stepper Layout */
+  .stepper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  /* Individual Step */
+  .step-item {
+    text-align: center;
+    position: relative;
+    flex: 1;
+  }
+  
+  /* Step Circle */
+  .step-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #d9d9d9;
+    display: inline-block;
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Active Step */
+  .step-circle.active {
+    background-color: orange;
+  }
+  
+  /* Step Connecting Line */
+  .step-line {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 4px;
+    background-color: #d9d9d9;
+    transform: translateY(-50%);
+    z-index: 1;
+  }
+  
+  /* Active Line */
+  .step-line.active {
+    background-color: orange;
+  }
+  
+  /* Step Label */
+  .step-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-top: 8px;
+  }
+  
+  /* Subtext */
+  .step-subtext {
+    font-size: 12px;
+    color: gray;
+  }
+  
+  /* NextScreen Container */
+  .next-screen-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
