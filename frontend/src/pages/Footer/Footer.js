@@ -2,9 +2,10 @@ import React from "react";
 import { Layout, Row, Col, Typography } from "antd";
 import {
   FacebookOutlined,
-  InstagramOutlined,
-  YoutubeOutlined,
+  LinkedinOutlined,
+  MailOutlined,
   WhatsAppOutlined,
+  PhoneFilled,
 } from "@ant-design/icons";
 
 const { Footer } = Layout;
@@ -21,11 +22,13 @@ const CustomFooter = () => {
           </Title>
           <Text>STRATEGY.TECHNOLOGY.INNOVATION</Text>
           <div style={{ marginTop: 10 }}>
+          <LinkedinOutlined style={{ fontSize: "20px", margin: "0 8px" }} />
+          <MailOutlined style={{ fontSize: "20px", margin: "0 8px" }} />
             <FacebookOutlined style={{ fontSize: "20px", margin: "0 8px" }} />
-            <InstagramOutlined style={{ fontSize: "20px", margin: "0 8px" }} />
-            <YoutubeOutlined style={{ fontSize: "20px", margin: "0 8px" }} />
+           
+           
             <WhatsAppOutlined style={{ fontSize: "20px", margin: "0 8px" }} /><br/>
-         <Text>+1- 888-EXAVALU (888-392-8258) info@exavalu.com</Text>
+         <Text><PhoneFilled/>+1- 888-EXAVALU (888-392-8258) info@exavalu.com</Text>
           </div>
         </Col>
 
