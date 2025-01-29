@@ -32,8 +32,8 @@
 }
 
 .nav-links a:hover {
-  color: black;
-  text-decoration: underline;
+  color:  #FF4D4F;
+  /* text-decoration: underline; */
 }
 
 /* Active link styling */
