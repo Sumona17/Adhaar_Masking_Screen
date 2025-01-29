@@ -12,7 +12,8 @@ const { Title, Text } = Typography;
 
 const CustomFooter = () => {
   return (
-    <Footer style={{ background: "white", padding: "40px 20px", textAlign: "center" }}>
+    
+    <Footer style={{ background: "white", padding: "40px 20px", textAlign: "center", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)" }}>
       <Row justify="center" gutter={[32, 16]}>
         <Col xs={24} sm={6}>
           <Title level={3} style={{ color: "#333" }}>

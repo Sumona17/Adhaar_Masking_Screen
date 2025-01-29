@@ -27,14 +27,21 @@ const UploadFile = () => {
     return false;
   };
   const MethodContainer = styled.div`
-  padding: 1rem;
-  border: 1px solid #f0f0f0;
+  
+  // border: 1px solid #f0f0f0;
+   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+ 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   margin-bottom: 1rem;
   transition: all 0.3s;
-  &:hover {
-    background: #fafafa;
-  }
+  // &:hover {
+  //   background: #fafafa;
+  // }
   &.selected {
     border-color: #ff8d2f;
     background: #e6f7ff;
@@ -88,7 +95,7 @@ const UploadFile = () => {
   };
 
   return (
-    <div className="container" style={{justifyContent: 'center', padding: '30px 50px'}}>
+    // <div className="container" style={{justifyContent: 'center', padding: '30px 50px'}}>
       <MethodContainer>
         <h2 className="title">Upload Your Adhaar Card</h2>
         <div className="upload-box">
@@ -131,7 +138,7 @@ const UploadFile = () => {
         </MethodContainer>
 
       
-    </div>
+    
   );
 };
 

@@ -14,9 +14,11 @@ const CustomLayout = () => {
     <Layout
       style={{
         minHeight: "100vh",
-        backgroundImage: "url(/public/bg1.jpg')", // Set the background image
-        backgroundSize: "cover", // Ensures the image covers the entire area
+        
+        // backgroundImage: "url(" + { bg1.jpg } + ")",// Set the background image
+        // Ensures the image covers the entire area
         backgroundPosition: "center", // Centers the image
+
       }}
     >
      
@@ -26,7 +28,9 @@ const CustomLayout = () => {
         
         style={{
           padding: "20px",
-          backgroundColor: "#f8f9fa",
+          backgroundImage: "url(bg1.jpg)",
+           backgroundSize:"cover",
+
           borderRadius: "10px",
           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
           margin: "0px 0", // Margin above and below the content
