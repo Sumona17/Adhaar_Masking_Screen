@@ -1,8 +1,14 @@
 /* Custom radio group container */
 .custom-radio-group {
     display: flex;
-    gap: 95px;
+   
+    flex-direction:row;
+    align-items: center;
+  
+    gap: 10%;
     margin-top: 20px;
+   margin-left: 20%;
+    
   }
   
   /* Custom radio button styles */

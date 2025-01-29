@@ -3,7 +3,8 @@ import "./CustomRadioGroup.css"; // Import styles
 import Stepper from "./Stepper"; // Import Stepper component
 
 const CustomRadioGroup = () => {
-  const [selectedValue, setSelectedValue] = useState(null);
+  // Set default selection to the second option ("Gen AI" -> value = 2)
+  const [selectedValue, setSelectedValue] = useState(2);
 
   // Handle radio button selection
   const onChange = (value) => {
@@ -31,7 +32,7 @@ const CustomRadioGroup = () => {
         })}
       </div>
 
-      {/* Render Stepper when option B is selected */}
+      {/* Render Stepper when "Gen AI" (option 2) is selected by default */}
       <div className="extra-content">
         {selectedValue === 2 ? (
           <Stepper /> // Calls the Stepper component
