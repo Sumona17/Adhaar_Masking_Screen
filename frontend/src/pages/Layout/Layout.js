@@ -28,8 +28,8 @@ const CustomLayout = () => {
         
         style={{
           padding: "20px",
-          backgroundImage: "url(bg1.jpg)",
-           backgroundSize:"cover",
+          // backgroundImage: "url(bg1.jpg)",
+          //  backgroundSize:"cover",
 
           borderRadius: "10px",
           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
