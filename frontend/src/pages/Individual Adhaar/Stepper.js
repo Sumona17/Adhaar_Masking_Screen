@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import NextScreen from "./NextScreen"; // Import NextScreen component
 import "./Stepper.css"; // Import styles
+import ClassificationScreen from "./ClassificationScreen";
 
 const Stepper = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -49,6 +50,11 @@ const Stepper = () => {
       {currentStep === 1 && (
         <div className="next-screen-container">
           <NextScreen />
+        </div>
+      )}
+      {currentStep === 2 && (
+        <div className="next-screen-container">
+          <ClassificationScreen />
         </div>
       )}
     </div>

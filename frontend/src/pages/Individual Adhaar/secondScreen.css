@@ -64,3 +64,25 @@
     background-color: #f16608;
     transform: scale(1.05);
   }
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    color: #666;
+  }
+  
+  .error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    color: #ff4444;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .download-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }

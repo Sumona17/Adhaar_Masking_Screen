@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./secondScreen.css";
 import { useLocation } from "react-router-dom";
 
-const NextScreen = () => {
+const GenaiMaskingScreen = () => {
   const location = useLocation();
   const { uploadedImage } = location.state || {};
   const [maskedImage, setMaskedImage] = useState(null);
@@ -29,7 +29,7 @@ const NextScreen = () => {
       formData.append('file', blob, 'image.jpg');
 
       // Make API call
-      const response = await fetch('http://127.0.0.1:8000/mask_aadhar/classical_ai/', {
+      const response = await fetch('http://127.0.0.1:8000/mask_aadhar/genai/', {
         method: 'POST',
         body: formData,
         headers: {
@@ -126,4 +126,4 @@ const NextScreen = () => {
   );
 };
 
-export default NextScreen;
+export default GenaiMaskingScreen;
