@@ -9,27 +9,31 @@ const ClassificationScreen = () => {
   };
  
   return (
-<div className="main-container">
-<h3>Select an Option:</h3>
-<label>
-<input 
-          type="radio" 
-          value="Option 1" 
-          checked={selectedOption === 'Option 1'}
-          onChange={handleChange} 
-        />
-        Option 1
-</label>
-<label>
-<input 
-          type="radio" 
-          value="Option 2" 
-          checked={selectedOption === 'Option 2'}
-          onChange={handleChange} 
-        />
-        Option 2
-</label>
-</div>
+    <div className="main-container">
+      <h3>Select an Option:</h3>
+      <div className="custom-radio-group">
+        <label className="custom-radio-label">
+          <input
+            type="radio"
+            value="Option 1"
+            checked={selectedOption === 'Option 1'}
+            onChange={handleChange}
+          />
+          <span className="custom-radio"></span>
+          Classify and Mask
+        </label>
+        <label className="custom-radio-label">
+          <input
+            type="radio"
+            value="Option 2"
+            checked={selectedOption === 'Option 2'}
+            onChange={handleChange}
+          />
+          <span className="custom-radio"></span>
+          Mask
+        </label>
+      </div>
+    </div>
   );
 };
  

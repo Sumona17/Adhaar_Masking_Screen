@@ -45,18 +45,6 @@ const Stepper = () => {
           );
         })}
       </div>
-
-      {/* Render NextScreen below the stepper when Step 1 is selected */}
-      {currentStep === 1 && (
-        <div className="next-screen-container">
-          <NextScreen />
-        </div>
-      )}
-      {currentStep === 2 && (
-        <div className="next-screen-container">
-          <ClassificationScreen />
-        </div>
-      )}
     </div>
   );
 };

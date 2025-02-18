@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./secondScreen.css";
 import { useLocation } from "react-router-dom";
+import Stepper from "./Stepper";
 
 const NextScreen = () => {
   const location = useLocation();
@@ -65,6 +66,7 @@ const NextScreen = () => {
 
   return (
     <div className="first-screen">
+      <Stepper />
       <div className="cards-container">
         {/* Original Image Card */}
         <div className="card">
@@ -114,7 +116,7 @@ const NextScreen = () => {
           </div>
         </div>
       </div>
-
+      <div className="download-btn-container"> 
       <button 
         className="download-btn" 
         onClick={handleDownload}
@@ -122,6 +124,7 @@ const NextScreen = () => {
       >
         Download
       </button>
+      </div>
     </div>
   );
 };
