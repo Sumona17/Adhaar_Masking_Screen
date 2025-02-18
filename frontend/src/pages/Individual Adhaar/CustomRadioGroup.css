@@ -1,0 +1,70 @@
+/* Custom radio group container */
+.custom-radio-group {
+    display: flex;
+   
+    flex-direction:row;
+    align-items: center;
+  
+    gap: 10%;
+    margin-top: 20px;
+   margin-left: 20%;
+    
+  }
+  
+  /* Custom radio button styles */
+  .custom-radio-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 16px;
+    position: relative;
+  }
+  
+  /* Hide default radio button */
+  .custom-radio-label input[type="radio"] {
+    display: none;
+  }
+  
+  /* Unchecked radio button */
+  .custom-radio {
+    width: 20px;
+    height: 20px;
+    border: 2px solid gray;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    margin-right: 8px;
+  }
+  
+  /* Checked (Orange) */
+  .custom-radio-label input[type="radio"]:checked + .custom-radio {
+    border-color: orange;
+  }
+  
+  /* Inner dot when checked */
+  .custom-radio-label input[type="radio"]:checked + .custom-radio::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background-color: orange;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  /* Hover effect */
+  .custom-radio-label:hover .custom-radio {
+    border-color: orange;
+  }
+  
+  /* Extra content styling */
+  .extra-content {
+    margin-top: 20px;
+    padding: 10px;
+    /* border: 1px solid #d9d9d9; */
+    border-radius: 8px;
+    /* background-color: #f5f5f5; */
+  }
+  

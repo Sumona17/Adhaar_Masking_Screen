@@ -1,0 +1,75 @@
+.container {
+  display: flex;
+  
+  width: 70%;
+  height: 100%;
+  background-color: #f4f4f4;
+  gap: 12px;
+  margin-left: 15%;
+}
+
+.section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  /* border: 2px solid #007bff; */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  background: white;
+  transition: all 0.3s ease-in-out;
+}
+
+/* .section:hover {
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.25);
+  transform: translateY(-5px);
+} */
+
+.input-section {
+  background: linear-gradient(135deg, #fffbf6, white);
+  border-radius: 8px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Added transition */
+  
+}
+.title{
+  color: #002d5e;
+}
+.file-inside{
+  font-size: larger;
+  color: #002d5e;
+}
+
+.output-section {
+  background: linear-gradient(135deg, #ffffff,#fffbf6);
+  border-radius: 8px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Added transition */
+}
+
+.upload-box {
+  border: 2px dashed #ffb36d;
+  padding: 35px;
+  margin-bottom: 15px;
+  text-align: center;
+  background:white;
+}
+
+.button {
+  background-color: #ff8d2f;
+  color: white;
+  padding: 12px 26px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.button:hover {
+  background-color: #f16608;
+  transform: scale(1.05);
+}

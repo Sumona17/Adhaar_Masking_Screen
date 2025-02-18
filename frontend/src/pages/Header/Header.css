@@ -1,0 +1,76 @@
+/* Header styles */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Logo */
+.logo img {
+  height: 40px;
+}
+
+.allnav {
+  margin-left: 40px;
+}
+
+/* Navigation Links */
+.nav-links {
+  display: flex;
+  gap: 20px;
+  margin-left: -400px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #444;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color:  #FF4D4F;
+  /* text-decoration: underline; */
+}
+
+/* Active link styling */
+.nav-links a.active {
+  color: #FF4D4F;
+  border-bottom: 2px solid #FF4D4F;
+}
+
+/* Right Section */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.login-btn {
+  font-weight: bold;
+  font-size: 18px;
+  color: #444;
+}
+
+.login-btn:hover {
+  color: #FF4D4F;
+}
+
+/* Mobile Menu Icon */
+.menu-icon {
+  display: none;
+}
+
+/* Responsive - Show menu icon on mobile */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .menu-icon {
+    display: block;
+  }
+}
