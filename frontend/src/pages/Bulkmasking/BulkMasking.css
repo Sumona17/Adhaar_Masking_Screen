@@ -73,3 +73,29 @@
   background-color: #f16608;
   transform: scale(1.05);
 }
+
+.masking-button{
+  background-color: #ff8d2f;
+  color: white;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.error-message {
+  color: red;
+  margin: 10px 0;
+}
+
+.results {
+  margin-top: 20px;
+}
+
+.output-path {
+  margin-top: 10px;
+}
