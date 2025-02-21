@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { Modal } from "antd";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
-import "./BulkMasking.css";
 
 const BulkMasking = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -9,7 +7,6 @@ const BulkMasking = () => {
   const [error, setError] = useState(null);
   const [zipBlob, setZipBlob] = useState(null);
   const [outputPath, setOutputPath] = useState("");
-  const [showResults, setShowResults] = useState(false);
   const [maskingResults, setMaskingResults] = useState(null);
 
   const handleFileSelect = (event) => {
@@ -18,8 +15,24 @@ const BulkMasking = () => {
     setError(null);
   };
 
+  const handleFolderSelect = (event) => {
+    const files = Array.from(event.target.files);
+    // Filter out directory entries and normalize file paths
+    const validFiles = files.filter(file => file.size > 0).map(file => {
+      // Create a new File object with a normalized path
+      return new File([file], file.name, {
+        type: file.type,
+        lastModified: file.lastModified
+      });
+    });
+
+    setSelectedFiles(prevFiles => [...prevFiles, ...validFiles]);
+    setError(null);
+  };
+
+
   const removeFile = (indexToRemove) => {
-    setSelectedFiles(prevFiles => 
+    setSelectedFiles(prevFiles =>
       prevFiles.filter((_, index) => index !== indexToRemove)
     );
   };
@@ -32,7 +45,7 @@ const BulkMasking = () => {
       }
       const data = await response.json();
       setMaskingResults(data);
-      setShowResults(true); // Make sure this is being set to true
+      alert("Masking process completed successfully!");
     } catch (error) {
       setError("Error fetching masking results: " + error.message);
     }
@@ -50,7 +63,9 @@ const BulkMasking = () => {
     try {
       const formData = new FormData();
       selectedFiles.forEach((file) => {
-        formData.append('files', file);
+        // Ensure we're using only the filename without path
+        const fileName = file.name.split(/[\/\\]/).pop();
+        formData.append('files', file, fileName);
       });
 
       const response = await fetch('http://localhost:8000/mask_multiple_aadhar_cards', {
@@ -74,18 +89,16 @@ const BulkMasking = () => {
         : 'masked_documents.zip';
       setOutputPath(filename);
 
-      // Assuming the API returns a submission_id in the response headers
       const submissionId = response.headers.get('X-Submission-ID');
       if (submissionId) {
         await fetchMaskingResults(submissionId);
       } else {
-        // If no submission ID, show mock results for testing
         setMaskingResults({
           successful_count: selectedFiles.length,
           failed_count: 0,
           failed_files: []
         });
-        setShowResults(true);
+        alert("Masking process completed successfully!");
       }
     } catch (error) {
       setError("Error processing files: " + error.message);
@@ -113,24 +126,38 @@ const BulkMasking = () => {
         <h2 className="title">Input data</h2>
         <div className="upload-box">
           <p className="file-inside">Upload PDF or images</p>
-          <input 
+          <input
             type="file"
             multiple
             accept=".pdf,.png,.jpg,.jpeg"
             onChange={handleFileSelect}
           />
         </div>
-        
-        <label className="button">
-          Choose Files
-          <input
-            type="file"
-            multiple
-            accept=".pdf,.png,.jpg,.jpeg"
-            onChange={handleFileSelect}
-            style={{ display: "none" }}
-          />
-        </label>
+
+        <div className="button-group">
+          <label className="button">
+            Choose Files
+            <input
+              type="file"
+              multiple
+              accept=".pdf,.png,.jpg,.jpeg"
+              onChange={handleFileSelect}
+              style={{ display: "none" }}
+            />
+          </label>
+
+          <label className="button">
+            Choose Folder
+            <input
+              type="file"
+              webkitdirectory="true"
+              directory="true"
+              multiple
+              onChange={handleFolderSelect}
+              style={{ display: "none" }}
+            />
+          </label>
+        </div>
 
         {error && (
           <div className="error-message">
@@ -145,7 +172,7 @@ const BulkMasking = () => {
               {selectedFiles.map((file, index) => (
                 <li key={index}>
                   {file.name}
-                  <button 
+                  <button
                     onClick={() => removeFile(index)}
                     style={{ marginLeft: '10px' }}
                   >
@@ -154,7 +181,7 @@ const BulkMasking = () => {
                 </li>
               ))}
             </ul>
-            <button 
+            <button
               className="masking-button"
               onClick={startMasking}
               disabled={processing}
@@ -168,50 +195,43 @@ const BulkMasking = () => {
       {/* Output Folder Path Section */}
       <div className="section output-section">
         {zipBlob ? (
-          <button 
-            className="button"
-            onClick={handleDownload}
-          >
-            Download Masked Files ({outputPath})
-          </button>
+          <>
+            <button
+              className="button"
+              onClick={handleDownload}
+            >
+              Download Masked Files ({outputPath})
+            </button>
+
+            {/* Results Section */}
+            {maskingResults && (
+              <div className="results-container">
+                <h3>Masking Results</h3>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+                  <CheckCircleOutlined style={{ color: '#52c41a', fontSize: '20px', marginRight: '8px' }} />
+                  <span>Successfully masked: {maskingResults.successful_count} files</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+                  <CloseCircleOutlined style={{ color: '#ff4d4f', fontSize: '20px', marginRight: '8px' }} />
+                  <span>Failed to mask: {maskingResults.failed_count} files</span>
+                </div>
+                {maskingResults.failed_files && maskingResults.failed_files.length > 0 && (
+                  <div>
+                    <p style={{ fontWeight: 500, marginBottom: '8px' }}>Failed files:</p>
+                    <ul style={{ color: '#ff4d4f', paddingLeft: '20px' }}>
+                      {maskingResults.failed_files.map((file, index) => (
+                        <li key={index}>{file}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+          </>
         ) : (
           <button className="button" disabled>Output folder path</button>
         )}
       </div>
-
-      {/* Ant Design Modal */}
-      <Modal
-        title="Masking Results"
-        visible={showResults} // Changed from 'open' to 'visible'
-        onOk={() => setShowResults(false)}
-        onCancel={() => setShowResults(false)}
-        okText="Close"
-        cancelButtonProps={{ style: { display: 'none' } }}
-        destroyOnClose={true}
-      >
-        {maskingResults && (
-          <div style={{ padding: '20px 0' }}>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-              <CheckCircleOutlined style={{ color: '#52c41a', fontSize: '20px', marginRight: '8px' }} />
-              <span>Successfully masked: {maskingResults.successful_count} files</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-              <CloseCircleOutlined style={{ color: '#ff4d4f', fontSize: '20px', marginRight: '8px' }} />
-              <span>Failed to mask: {maskingResults.failed_count} files</span>
-            </div>
-            {maskingResults.failed_files && maskingResults.failed_files.length > 0 && (
-              <div>
-                <p style={{ fontWeight: 500, marginBottom: '8px' }}>Failed files:</p>
-                <ul style={{ color: '#ff4d4f', paddingLeft: '20px' }}>
-                  {maskingResults.failed_files.map((file, index) => (
-                    <li key={index}>{file}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        )}
-      </Modal>
     </div>
   );
 };
