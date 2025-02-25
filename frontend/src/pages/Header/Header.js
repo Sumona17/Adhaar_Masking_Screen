@@ -22,6 +22,9 @@ const Header = () => {
             <Menu.Item key="/bulkMasking">
                 <Link to="/bulkMasking">Bulk Masking</Link>
             </Menu.Item>
+            <Menu.Item key="/ecganalysis">
+                <Link to="/ecganalysis">ECG Image Analysis</Link>
+            </Menu.Item>
         </Menu>
     );
 
@@ -41,6 +44,9 @@ const Header = () => {
                     </Link>
                     <Link to="/bulkMasking" className={isActive("/bulkMasking")}>
                         Bulk Masking
+                    </Link>
+                    <Link to="/ecganalysis" className={isActive("/ecganalysis")}>
+                        ECG Image Analysis
                     </Link>
                 </nav>
             </div>

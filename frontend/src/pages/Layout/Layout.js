@@ -7,6 +7,7 @@ import BulkMasking from "../Bulkmasking/BulkMasking";
 import UploadFile from "../Individual Adhaar/UploadFile";
 import NextScreen from "../Individual Adhaar/NextScreen";
 import CustomRadioGroup from "../Individual Adhaar/CustomRadioGroup";
+import ECGAnalysis from "../ECG/EcgAnalysis";
 const {  Content } = Layout;
 
 const CustomLayout = () => {
@@ -43,6 +44,7 @@ const CustomLayout = () => {
           <Route path="/bulkMasking" element={<BulkMasking />} />
           <Route path="/secondScreen" element={<NextScreen />} />
           <Route path="/radio-group" element={<CustomRadioGroup/>} />
+          <Route path="/ecganalysis" element={<ECGAnalysis/>} />
           
         </Routes>
       </Content>
