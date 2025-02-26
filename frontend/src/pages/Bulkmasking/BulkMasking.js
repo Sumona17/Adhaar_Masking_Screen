@@ -135,7 +135,7 @@ const BulkMasking = () => {
         </div>
 
         <div className="button-group">
-          <label className="button">
+          {/* <label className="button">
             Choose Files
             <input
               type="file"
@@ -144,7 +144,7 @@ const BulkMasking = () => {
               onChange={handleFileSelect}
               style={{ display: "none" }}
             />
-          </label>
+          </label> */}
 
           <label className="button">
             Choose Folder
