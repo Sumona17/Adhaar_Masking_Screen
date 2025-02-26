@@ -251,17 +251,40 @@ const ECGAnalysis = () => {
         throw new Error(`Server responded with status: ${response.status}`);
       }
       
-      const result = await response.json();
+      // Check if the response is JSON or blob
+      const contentType = response.headers.get('content-type');
       
-      // Set model response
-      setModelResponse(result.analysis || "ECG analysis completed successfully.");
-      
-      // Create a URL for the output PDF download (using the original PDF for now)
-      // In a real app, you would use the response from the API
-      if (pdfDocData) {
-        const blob = new Blob([pdfDocData], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
+      if (contentType && contentType.includes('application/json')) {
+        // Handle JSON response
+        const result = await response.json();
+        setModelResponse(result.analysis || "ECG analysis completed successfully.");
+        
+        // If the JSON response contains a PDF URL
+        if (result.pdf_url) {
+          // Fetch the PDF from the provided URL
+          const pdfResponse = await fetch(result.pdf_url);
+          if (pdfResponse.ok) {
+            const pdfBlob = await pdfResponse.blob();
+            const url = URL.createObjectURL(pdfBlob);
+            setOutputPdfUrl(url);
+          }
+        } else if (result.pdf_base64) {
+          // If the JSON response contains a base64 encoded PDF
+          const binaryString = atob(result.pdf_base64);
+          const bytes = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+          const pdfBlob = new Blob([bytes], { type: 'application/pdf' });
+          const url = URL.createObjectURL(pdfBlob);
+          setOutputPdfUrl(url);
+        }
+      } else {
+        // Handle direct PDF response
+        const pdfBlob = await response.blob();
+        const url = URL.createObjectURL(pdfBlob);
         setOutputPdfUrl(url);
+        setModelResponse("ECG analysis completed successfully. You can download the PDF report below.");
       }
       
       message.success('ECG analysis completed');
@@ -406,7 +429,7 @@ const ECGAnalysis = () => {
             {/* Rotated Preview */}
             <Col span={12}>
               {rotateOption === 'Yes' && (
-                <Card style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}
+                <Card style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}
                   title={`Rotated First Page Preview (${rotationAngle}°)`}
                   extra={
                     rotatedPdfUrl && (
@@ -453,7 +476,7 @@ const ECGAnalysis = () => {
                     loading={analyzing}
                     onClick={handleAnalysis}
                     disabled={!pdfDocument}
-                    style={{ marginBottom: '16px' }}
+                    size="large"
                   >
                     Analyze ECG
                   </Button>
@@ -463,17 +486,18 @@ const ECGAnalysis = () => {
                       <Card title="Analysis Results" bordered={false}>
                         <Paragraph>{modelResponse}</Paragraph>
                       </Card>
-
-                      {outputPdfUrl && (
-                        <Button 
-                          type="primary" 
-                          icon={<DownloadOutlined />}
-                          onClick={() => window.open(outputPdfUrl, '_blank')}
-                        >
-                          Download PDF Report
-                        </Button>
-                      )}
                     </>
+                  )}
+                  
+                  {outputPdfUrl && (
+                    <Button 
+                      type="primary" 
+                      icon={<DownloadOutlined />}
+                      onClick={() => window.open(outputPdfUrl, '_blank')}
+                      size="large"
+                    >
+                      Download PDF Report
+                    </Button>
                   )}
                 </Space>
               </Card>
