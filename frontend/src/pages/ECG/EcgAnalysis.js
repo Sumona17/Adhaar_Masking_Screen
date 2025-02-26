@@ -8,7 +8,6 @@ import {
   Select,
   Row,
   Col,
-  Input,
   message,
   Divider,
   Typography,
@@ -19,13 +18,12 @@ import {
   UploadOutlined,
   RotateRightOutlined,
   ZoomInOutlined,
-  SendOutlined,
-  DownloadOutlined
+  DownloadOutlined,
+  LineChartOutlined
 } from '@ant-design/icons';
 
 const { Title, Text, Paragraph } = Typography;
 const { Option } = Select;
-const { TextArea } = Input;
 
 const ECGAnalysis = () => {
   // States for the component
@@ -35,15 +33,15 @@ const ECGAnalysis = () => {
   const [rotateOption, setRotateOption] = useState('No');
   const [rotationAngle, setRotationAngle] = useState(0);
   const [zoomFactor, setZoomFactor] = useState(2);
-  const [query, setQuery] = useState('');
-  const [modelResponse, setModelResponse] = useState('');
   const [loading, setLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
   const [rotatedPdfUrl, setRotatedPdfUrl] = useState(null);
   const [outputPdfUrl, setOutputPdfUrl] = useState(null);
   const [pageRotationInfo, setPageRotationInfo] = useState([]);
   const [pdfJsLoaded, setPdfJsLoaded] = useState(false);
   const [pdfDocData, setPdfDocData] = useState(null);
   const [pdfDocument, setPdfDocument] = useState(null);
+  const [modelResponse, setModelResponse] = useState('');
   const canvasRef = useRef(null);
   const rotatedCanvasRef = useRef(null);
 
@@ -96,6 +94,8 @@ const ECGAnalysis = () => {
       setPageRotationInfo([]);
       setPdfDocData(null);
       setPdfDocument(null);
+      setOutputPdfUrl(null);
+      setModelResponse('');
     }
   };
 
@@ -224,29 +224,53 @@ const ECGAnalysis = () => {
     }
   };
 
-  // Submit query to LLM
-  const handleSubmitQuery = async () => {
-    if (!rotatedPreview || !query) {
-      message.error('Please rotate an image and enter a query');
+  // Run ECG analysis
+  const handleAnalysis = async () => {
+    if (!fileList[0] || !fileList[0].originFileObj) {
+      message.error('Please upload a PDF first');
       return;
     }
 
-    setLoading(true);
-
-    // Simulate API call - in a real app you would call your backend here
-    setTimeout(() => {
-      const sampleResponse = "This ECG shows normal sinus rhythm with a rate of approximately 75 beats per minute. There are no significant ST segment deviations or T wave abnormalities. PR and QT intervals appear within normal limits. There is no evidence of ischemia, infarction, or significant arrhythmia on this tracing.";
-      setModelResponse(sampleResponse);
+    setAnalyzing(true);
+    
+    try {
+      // Create form data
+      const formData = new FormData();
+      formData.append('file', fileList[0].originFileObj);
       
-      // Create a simple download URL for the "Generated PDF"
+      // Make API call
+      const response = await fetch('http://localhost:8000/ecg_analysis', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'accept': 'application/json',
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Server responded with status: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      
+      // Set model response
+      setModelResponse(result.analysis || "ECG analysis completed successfully.");
+      
+      // Create a URL for the output PDF download (using the original PDF for now)
+      // In a real app, you would use the response from the API
       if (pdfDocData) {
         const blob = new Blob([pdfDocData], { type: 'application/pdf' });
         const url = URL.createObjectURL(blob);
         setOutputPdfUrl(url);
       }
       
-      setLoading(false);
-    }, 2000);
+      message.success('ECG analysis completed');
+    } catch (error) {
+      console.error('Error analyzing ECG:', error);
+      message.error('Error analyzing ECG: ' + error.message);
+    } finally {
+      setAnalyzing(false);
+    }
   };
 
   // Effect to handle rotation option and angle changes
@@ -280,7 +304,7 @@ const ECGAnalysis = () => {
       <Row gutter={24}>
         {/* Left Sidebar / Configuration */}
         <Col span={6}>
-          <Card title="Upload and Configure PDF">
+          <Card title="Upload and Configure PDF" style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
             <Upload
               beforeUpload={(file) => {
                 const isPDF = file.type === 'application/pdf';
@@ -344,7 +368,7 @@ const ECGAnalysis = () => {
           </Card>
 
           {pageRotationInfo.length > 0 && (
-            <Card title="PDF Rotation Information" style={{ marginTop: '16px' }}>
+            <Card title="PDF Rotation Information" style={{ marginTop: '16px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
               {pageRotationInfo.map((info, index) => (
                 <p key={index}>Page {info.page}: Rotation Angle = {info.angle}°</p>
               ))}
@@ -357,7 +381,7 @@ const ECGAnalysis = () => {
           <Row gutter={[16, 16]}>
             {/* PDF Preview */}
             <Col span={12}>
-              <Card title="Preview First Page" >
+              <Card title="Preview First Page" style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
                 {loading && <div style={{ textAlign: 'center', margin: '20px' }}>Loading...</div>}
                 {!loading && pdfPreview ? (
                   <Image 
@@ -382,7 +406,7 @@ const ECGAnalysis = () => {
             {/* Rotated Preview */}
             <Col span={12}>
               {rotateOption === 'Yes' && (
-                <Card 
+                <Card style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}
                   title={`Rotated First Page Preview (${rotationAngle}°)`}
                   extra={
                     rotatedPdfUrl && (
@@ -419,48 +443,41 @@ const ECGAnalysis = () => {
               )}
             </Col>
 
-            {/* LLM Query Section */}
-            {rotatedPreview && (
-              <Col span={24}>
-                <Card title="Query LLM">
-                  <Space direction="vertical" style={{ width: '100%' }}>
-                    <Input
-                      placeholder="Enter your query about the ECG"
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      suffix={
+            {/* Analysis Section */}
+            <Col span={24}>
+              <Card title="ECG Analysis" style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
+                <Space direction="vertical" style={{ width: '100%' }}>
+                  <Button 
+                    type="primary" 
+                    icon={<LineChartOutlined />} 
+                    loading={analyzing}
+                    onClick={handleAnalysis}
+                    disabled={!pdfDocument}
+                    style={{ marginBottom: '16px' }}
+                  >
+                    Analyze ECG
+                  </Button>
+
+                  {modelResponse && (
+                    <>
+                      <Card title="Analysis Results" bordered={false}>
+                        <Paragraph>{modelResponse}</Paragraph>
+                      </Card>
+
+                      {outputPdfUrl && (
                         <Button 
                           type="primary" 
-                          icon={<SendOutlined />} 
-                          onClick={handleSubmitQuery}
-                          loading={loading}
+                          icon={<DownloadOutlined />}
+                          onClick={() => window.open(outputPdfUrl, '_blank')}
                         >
-                          Submit
+                          Download PDF Report
                         </Button>
-                      }
-                    />
-
-                    {modelResponse && (
-                      <>
-                        <Card title="Model Response" bordered={false}>
-                          <Paragraph>{modelResponse}</Paragraph>
-                        </Card>
-
-                        {outputPdfUrl && (
-                          <Button 
-                            type="primary" 
-                            icon={<DownloadOutlined />}
-                            onClick={() => window.open(outputPdfUrl, '_blank')}
-                          >
-                            Download Generated PDF
-                          </Button>
-                        )}
-                      </>
-                    )}
-                  </Space>
-                </Card>
-              </Col>
-            )}
+                      )}
+                    </>
+                  )}
+                </Space>
+              </Card>
+            </Col>
           </Row>
         </Col>
       </Row>
