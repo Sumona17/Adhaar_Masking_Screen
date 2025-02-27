@@ -36,17 +36,17 @@ const Header = () => {
             </div>
             <div className="allnav">
                 <nav className="nav-links">
-                    <Link to="/background" className={isActive("/background")}>
+                    {/* <Link to="/background" className={isActive("/background")}>
                         Background
-                    </Link>
+                    </Link> */}
                     <Link to="/individualAdhaar" className={isActive("/individualAdhaar")}>
-                        Individual Adhaar
+                        Online Aadhaar Masking
                     </Link>
                     <Link to="/bulkMasking" className={isActive("/bulkMasking")}>
-                        Bulk Masking
+                        Batch Aadhaar Masking
                     </Link>
                     <Link to="/ecganalysis" className={isActive("/ecganalysis")}>
-                        ECG Image Analysis
+                        ECG Analysis
                     </Link>
                 </nav>
             </div>
