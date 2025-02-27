@@ -84,7 +84,7 @@ const UploadFile = () => {
 
   const handleNext = () => {
     if (fileList.length > 0 && imageUrl) {
-      navigate('/radio-group', { 
+      navigate('/secondScreen', { 
         state: { 
           uploadedImage: imageUrl
         }
