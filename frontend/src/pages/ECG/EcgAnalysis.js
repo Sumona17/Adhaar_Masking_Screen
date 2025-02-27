@@ -41,9 +41,12 @@ const ECGAnalysis = () => {
   const [pdfJsLoaded, setPdfJsLoaded] = useState(false);
   const [pdfDocData, setPdfDocData] = useState(null);
   const [pdfDocument, setPdfDocument] = useState(null);
+  const [responsePdfDocument, setResponsePdfDocument] = useState(null);
+  const [responsePdfPreview, setResponsePdfPreview] = useState(null);
   const [modelResponse, setModelResponse] = useState('');
   const canvasRef = useRef(null);
   const rotatedCanvasRef = useRef(null);
+  const responsePdfCanvasRef = useRef(null);
 
   // Load PDF.js library from CDN
   useEffect(() => {
@@ -96,6 +99,8 @@ const ECGAnalysis = () => {
       setPdfDocument(null);
       setOutputPdfUrl(null);
       setModelResponse('');
+      setResponsePdfDocument(null);
+      setResponsePdfPreview(null);
     }
   };
 
@@ -167,6 +172,8 @@ const ECGAnalysis = () => {
       // Set the appropriate preview state
       if (rotate) {
         setRotatedPreview(imageUrl);
+      } else if (canvasRef === responsePdfCanvasRef) {
+        setResponsePdfPreview(imageUrl);
       } else {
         setPdfPreview(imageUrl);
       }
@@ -176,6 +183,32 @@ const ECGAnalysis = () => {
       console.error('Error rendering PDF page:', error);
       message.error('Error rendering PDF: ' + error.message);
       return null;
+    }
+  };
+
+  // Load and render response PDF
+  const loadResponsePdf = async (url) => {
+    try {
+      const response = await fetch(url);
+      const arrayBuffer = await response.arrayBuffer();
+      
+      // Load PDF document
+      const loadingTask = window.pdfjsLib.getDocument(arrayBuffer);
+      const pdf = await loadingTask.promise;
+      setResponsePdfDocument(pdf);
+      
+      // Check if the PDF has at least 2 pages
+      if (pdf.numPages >= 2) {
+        // Render the second page
+        await renderPdfPage(pdf, 2, responsePdfCanvasRef, false);
+      } else {
+        message.info('The response PDF has only one page.');
+        // Render the first page if second page is not available
+        await renderPdfPage(pdf, 1, responsePdfCanvasRef, false);
+      }
+    } catch (error) {
+      console.error('Error loading response PDF:', error);
+      message.error('Error loading response PDF: ' + error.message);
     }
   };
 
@@ -190,11 +223,17 @@ const ECGAnalysis = () => {
         if (rotateOption === 'Yes') {
           await renderPdfPage(pdfDocument, 1, rotatedCanvasRef, true);
         }
+        
+        // Update response PDF preview if available
+        if (responsePdfDocument) {
+          const pageNum = responsePdfDocument.numPages >= 2 ? 2 : 1;
+          await renderPdfPage(responsePdfDocument, pageNum, responsePdfCanvasRef, false);
+        }
       }
     };
     
     updatePreviews();
-  }, [zoomFactor, pdfDocument]);
+  }, [zoomFactor, pdfDocument, responsePdfDocument]);
 
   // Handle rotate PDF
   const handleRotate = async () => {
@@ -232,6 +271,8 @@ const ECGAnalysis = () => {
     }
 
     setAnalyzing(true);
+    setResponsePdfDocument(null);
+    setResponsePdfPreview(null);
     
     try {
       // Create form data
@@ -267,6 +308,7 @@ const ECGAnalysis = () => {
             const pdfBlob = await pdfResponse.blob();
             const url = URL.createObjectURL(pdfBlob);
             setOutputPdfUrl(url);
+            await loadResponsePdf(url);
           }
         } else if (result.pdf_base64) {
           // If the JSON response contains a base64 encoded PDF
@@ -278,6 +320,7 @@ const ECGAnalysis = () => {
           const pdfBlob = new Blob([bytes], { type: 'application/pdf' });
           const url = URL.createObjectURL(pdfBlob);
           setOutputPdfUrl(url);
+          await loadResponsePdf(url);
         }
       } else {
         // Handle direct PDF response
@@ -285,6 +328,7 @@ const ECGAnalysis = () => {
         const url = URL.createObjectURL(pdfBlob);
         setOutputPdfUrl(url);
         setModelResponse("ECG analysis completed successfully. You can download the PDF report below.");
+        await loadResponsePdf(url);
       }
       
       message.success('ECG analysis completed');
@@ -322,6 +366,7 @@ const ECGAnalysis = () => {
       <div style={{ display: 'none' }}>
         <canvas ref={canvasRef}></canvas>
         <canvas ref={rotatedCanvasRef}></canvas>
+        <canvas ref={responsePdfCanvasRef}></canvas>
       </div>
       
       <Row gutter={24}>
@@ -484,7 +529,21 @@ const ECGAnalysis = () => {
                   {modelResponse && (
                     <>
                       <Card title="Analysis Results" bordered={false}>
-                        <Paragraph>{modelResponse}</Paragraph>
+                        <Space direction="vertical" style={{ width: '100%' }}>
+                          <Paragraph>{modelResponse}</Paragraph>
+                          
+                          {/* Response PDF Page 2 Preview */}
+                          {responsePdfPreview && (
+                            <div>
+                              <Title level={4}>Report Preview</Title>
+                              <Image
+                                src={responsePdfPreview}
+                                alt="Response PDF Page 2"
+                                style={{ width: '100%', maxHeight: '800px', objectFit: 'contain' }}
+                              />
+                            </div>
+                          )}
+                        </Space>
                       </Card>
                     </>
                   )}
