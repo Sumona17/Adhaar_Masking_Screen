@@ -280,7 +280,7 @@ const ECGAnalysis = () => {
       formData.append('file', fileList[0].originFileObj);
       
       // Make API call
-      const response = await fetch('http://localhost:8000/ecg_analysis', {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/ecg_analysis`, {
         method: 'POST',
         body: formData,
         headers: {

@@ -39,7 +39,7 @@ const BulkMasking = () => {
 
   const fetchMaskingResults = async (submissionId) => {
     try {
-      const response = await fetch(`http://localhost:8000/masked_info/${submissionId}`);
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/masked_info/${submissionId}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -68,7 +68,7 @@ const BulkMasking = () => {
         formData.append('files', file, fileName);
       });
 
-      const response = await fetch('http://localhost:8000/mask_multiple_aadhar_cards', {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/mask_multiple_aadhar_cards`, {
         method: 'POST',
         body: formData,
         headers: {

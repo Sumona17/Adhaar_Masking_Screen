@@ -30,7 +30,7 @@ const NextScreen = () => {
       formData.append('file', blob, 'image.jpg');
 
       // Make API call
-      const response = await fetch('http://127.0.0.1:8000/mask_aadhar/classical_ai/', {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/mask_aadhar/classical_ai/`, {
         method: 'POST',
         body: formData,
         headers: {
